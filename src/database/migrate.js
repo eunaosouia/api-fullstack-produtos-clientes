@@ -1,6 +1,7 @@
+const db = require('./connection');
 db.serialize(() => {
   db.run(`
-    CREATE TABLE IF NOT EXISTS products (
+    CREATE TABLE IF NOT EXISTS produtos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL,
       preco REAL NOT NULL,
@@ -10,7 +11,7 @@ db.serialize(() => {
   `);
 
 
-db.run(`CREATE TABLE IF NOT EXISTS clients (
+db.run(`CREATE TABLE IF NOT EXISTS clientes (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome TEXT NOT NULL,
   email TEXT NOT NULL,
