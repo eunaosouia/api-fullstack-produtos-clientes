@@ -12,4 +12,4 @@ routes.post('/clientes', clienteController.create);
 routes.get('/clientes', clienteController.read);
 routes.get('/clientes/:id', clienteController.readById);
 
-module.exports = routes
+module.exports = routes;
