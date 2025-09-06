@@ -10,7 +10,6 @@ class ProdutosRepository {
   async listar(busca) {
     const repo = AppDataSource.getRepository('Produto');
     if (busca) {
-      // Busca por nome usando LIKE no SQLite
       return await repo.find({ where: { nome: AppDataSource.driver.options.type === 'sqlite' ? `%${busca}%` : busca } });
     }
     return await repo.find();
