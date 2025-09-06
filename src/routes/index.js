@@ -4,9 +4,81 @@ const routes = express.Router();
 const produtosController = require('../controllers/produtosController');
 const clientesController = require('../controllers/clientesController');
 
-// =====================
-// === PRODUTOS ========
-// =====================
+
+/**
+ * @swagger
+ * tags:
+ *   name: Clientes
+ *   description: Gerenciamento de clientes
+ */
+
+/**
+ * @swagger
+ * /clientes:
+ *   post:
+ *     summary: Cadastra um novo cliente
+ *     tags: [Clientes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nome
+ *               - email
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               telefone:
+ *                 type: string
+ *                 format: pattern
+ *                 pattern: ^\\(\\d{2}\\)\\d{8,9}$
+ *                 example: (11)912345678
+ *     responses:
+ *       201:
+ *         description: Cliente criado com sucesso
+ *       400:
+ *         description: Dados inválidos ou email duplicado
+ */
+routes.post('/clientes', clientesController.criar);
+
+/**
+ * @swagger
+ * /clientes:
+ *   get:
+ *     summary: Lista todos os clientes
+ *     tags: [Clientes]
+ *     responses:
+ *       200:
+ *         description: Lista de clientes
+ */
+routes.get('/clientes', clientesController.listar);
+
+/**
+ * @swagger
+ * /clientes/{id}:
+ *   get:
+ *     summary: Busca um cliente pelo ID
+ *     tags: [Clientes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do cliente
+ *     responses:
+ *       200:
+ *         description: Cliente encontrado
+ *       404:
+ *         description: Cliente não encontrado
+ */
+routes.get('/clientes/:id', clientesController.buscarPorId);
+
 
 /**
  * @swagger
@@ -84,89 +156,5 @@ routes.get('/produtos', produtosController.listar);
  *         description: Produto não encontrado
  */
 routes.get('/produtos/:id', produtosController.buscarPorId);
-
-module.exports = routes;
-
-routes.post('/produtos', produtosController.criar);
-routes.get('/produtos', produtosController.listar);
-routes.get('/produtos/:id', produtosController.buscarPorId);
-
-// =====================
-// === CLIENTES ========
-// =====================
-
-/**
- * @swagger
- * tags:
- *   name: Clientes
- *   description: Gerenciamento de clientes
- */
-
-/**
- * @swagger
- * /clientes:
- *   post:
- *     summary: Cadastra um novo cliente
- *     tags: [Clientes]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - nome
- *               - email
- *             properties:
- *               nome:
- *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *               telefone:
- *                 type: integer
- *       201:
- *         description: Cliente criado com sucesso
- *       400:
- *         description: Dados inválidos ou email duplicado
- */
-routes.post('/clientes', clientesController.criar);
-
-/**
- * @swagger
- * /clientes:
- *   get:
- *     summary: Lista todos os clientes
- *     tags: [Clientes]
- *     responses:
- *       200:
- *         description: Lista de clientes
- */
-routes.get('/clientes', clientesController.listar);
-
-/**
- * @swagger
- * /clientes/{id}:
- *   get:
- *     summary: Busca um cliente pelo ID
- *     tags: [Clientes]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID do cliente
- *     responses:
- *       200:
- *         description: Cliente encontrado
- *       404:
- *         description: Cliente não encontrado
- */
-routes.get('/clientes/:id', clientesController.buscarPorId);
-
-routes.post('/clientes', clientesController.criar);
-routes.get('/clientes', clientesController.listar);
-routes.get('/clientes/:id', clientesController.buscarPorId);
 
 module.exports = routes;

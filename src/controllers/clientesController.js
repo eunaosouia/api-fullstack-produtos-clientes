@@ -1,41 +1,90 @@
-const db = require('../database/connection');
+/**
+ * @swagger
+ * /clientes:
+ *   post:
+ *     summary: Cadastra um novo cliente
+ *     tags: [Clientes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nome
+ *               - email
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               telefone:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Cliente criado com sucesso
+ *       400:
+ *         description: Dados inválidos ou email duplicado
+ */
+
+/**
+ * @swagger
+ * /clientes:
+ *   get:
+ *     summary: Lista todos os clientes
+ *     tags: [Clientes]
+ *     responses:
+ *       200:
+ *         description: Lista de clientes
+ */
+
+/**
+ * @swagger
+ * /clientes/{id}:
+ *   get:
+ *     summary: Busca um cliente pelo ID
+ *     tags: [Clientes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do cliente
+ *     responses:
+ *       200:
+ *         description: Cliente encontrado
+ *       404:
+ *         description: Cliente não encontrado
+ */
+const clientesService = require('../services/clientesService');
 
 module.exports = {
-  criar(req, res) {
-    const { nome, email, telefone } = req.body;
-
-    if (!nome || !email || !telefone) {
-        return res.status(400).json({erro: 'Nome email e telefone são obrigatórios.'});
+  async criar(req, res) {
+    try {
+      const cliente = await clientesService.criarCliente(req.body);
+      res.status(201).json(cliente);
+    } catch (err) {
+      res.status(400).json({ erro: err.message });
     }
-
-    const query = `INSERT INTO clientes (nome, email, telefone) VALUES (?, ?, ?)`;
-    db.run(query, [nome, email, telefone], function(err) {
-      if (err) {
-        if (err.message.includes('UNIQUE constraint failed')) {
-          return res.status(400).json({erro: 'Email já cadastrado.'});
-        }
-        return res.status(500).json({erro: err.message});
-      }
-
-      res.status(201).json({id: this.lastID, nome, email, telefone});
-    });
   },
 
-  listar(req, res) {
-   db.all('SELECT * FROM clientes', (err, rows) => {
-      if (err) return res.status(500).json({erro: err.message});
-      res.json(rows);
-    });
+  async listar(req, res) {
+    try {
+      const clientes = await clientesService.listarClientes();
+      res.json(clientes);
+    } catch (err) {
+      res.status(500).json({ erro: err.message });
+    }
   },
 
-  buscarPorId(req, res) {
-    const { id } = req.params;
-
-    db.get('SELECT * FROM clientes WHERE id = ?', [id], (err, row) => {
-      if (err) return res.status(500).json({ erro: err.message });
-      if (!row) return res.status(404).json({ erro: 'Cliente não encontrado' });
-
-      res.json(row);
-    });
+  async buscarPorId(req, res) {
+    try {
+      const cliente = await clientesService.buscarClientePorId(req.params.id);
+      res.json(cliente);
+    } catch (err) {
+      res.status(404).json({ erro: err.message });
+    }
   }
 };

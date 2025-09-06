@@ -1,45 +1,96 @@
-const db = require('../database/connection');
+/**
+ * @swagger
+ * /produtos:
+ *   post:
+ *     summary: Cadastra um novo produto
+ *     tags: [Produtos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nome
+ *               - preco
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               preco:
+ *                 type: number
+ *               estoque:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Produto criado com sucesso
+ *       400:
+ *         description: Dados inválidos
+ */
+
+/**
+ * @swagger
+ * /produtos:
+ *   get:
+ *     summary: Lista todos os produtos
+ *     tags: [Produtos]
+ *     parameters:
+ *       - name: busca
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filtro de nome
+ *     responses:
+ *       200:
+ *         description: Lista de produtos
+ */
+
+/**
+ * @swagger
+ * /produtos/{id}:
+ *   get:
+ *     summary: Busca um produto pelo ID
+ *     tags: [Produtos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do produto
+ *     responses:
+ *       200:
+ *         description: Produto encontrado
+ *       404:
+ *         description: Produto não encontrado
+ */
+const produtosService = require('../services/produtosService');
 
 module.exports = {
-  criar(req, res) {
-    const { nome, preco, estoque } = req.body;
-
-    if (!nome || preco == null) {
-      return res.status(400).json({ erro: 'Nome e preço são obrigatórios.' });
+  async criar(req, res) {
+    try {
+    const produto = await produtosService.criarProduto(req.body);
+      res.status(201).json(produto);
+    } catch (err) {
+      res.status(400).json({ erro: err.message });
     }
-
-    const query = `INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)`;
-  db.run(query, [nome, preco, estoque || 0], function(err) {
-      if (err) return res.status(500).json({ erro: err.message });
-
-      res.status(201).json({ id: this.lastID, nome, preco, estoque });
-    });
   },
 
-  listar(req, res) {
-    const { busca } = req.query;
-    let query = 'SELECT * FROM produtos';
-    const params = [];
-
-    if (busca) {
-      query += ' WHERE nome LIKE ?';
-      params.push(`%${busca}%`);
+  async listar(req, res) {
+    try {
+    const produtos = await produtosService.listarProdutos(req.query.busca);
+      res.json(produtos);
+    } catch (err) {
+      res.status(500).json({ erro: err.message });
     }
-
-    db.all(query, params, (err, rows) => {
-      if (err) return res.status(500).json({ erro: err.message });
-      res.json(rows);
-    });
   },
 
-  buscarPorId(req, res) {
-    const { id } = req.params;
-
-    db.get('SELECT * FROM produtos WHERE id = ?', [id], (err, row) => {
-      if (err) return res.status(500).json({ erro: err.message });
-      if (!row) return res.status(404).json({ erro: 'Produto não encontrado' });
-
-      res.json(row);
-    });
+  async buscarPorId(req, res) {
+    try {
+    const produto = await produtosService.buscarProdutoPorId(req.params.id);
+      res.json(produto);
+    } catch (err) {
+      res.status(404).json({ erro: err.message });
+    }
   }
 };

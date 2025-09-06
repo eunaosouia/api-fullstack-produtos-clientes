@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: minha-api-node
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - sqlite_data:/data
+    environment:
+      - DB_PATH=/data/db.sqlite
+    command: npm run dev
+
+volumes:
+  sqlite_data:

@@ -80,7 +80,7 @@ The server will start on `http://localhost:3000`.
 ---
 
 ## Useful Commands
-- `npm run migrate` — Run database migrations
+- `npm run migrate` — Run database migrations with npm run migrate
 - `npm run dev` — Start server with nodemon
 - `npm start` — Start server normally
 

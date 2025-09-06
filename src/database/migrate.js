@@ -11,7 +11,7 @@ db.serialize(() => {
   `);
 
 
-db.run(`CREATE TABLE IF NOT EXISTS clientes (
+db.run(`CREATE TABLE IF NOT EXISTS cliente (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome TEXT NOT NULL,
   email TEXT NOT NULL,
