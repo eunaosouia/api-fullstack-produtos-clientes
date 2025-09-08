@@ -1,5 +1,5 @@
 require('reflect-metadata');
-const AppDataSource = require('./data-source');
+const AppDataSource = require('./database/data-source');
 const express = require('express');
 const routes = require('./routes');
 const setupSwagger = require('./swagger');

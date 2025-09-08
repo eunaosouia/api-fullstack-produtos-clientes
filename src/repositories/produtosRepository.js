@@ -1,4 +1,4 @@
-const AppDataSource = require('../data-source');
+const AppDataSource = require('../database/data-source');
 
 class ProdutosRepository {
   async criar(data) {

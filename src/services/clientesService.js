@@ -14,7 +14,7 @@ class ClientesService {
     if (!telefoneRegex.test(data.telefone)) {
       throw new Error('Telefone inválido.');
     }
-    const repo = require('../data-source').getRepository('Cliente');
+    const repo = require('../database/data-source').getRepository('Cliente');
     const existenteNome = await repo.findOneBy({ nome: data.nome });
     if (existenteNome) {
       throw new Error('Nome já cadastrado.');
