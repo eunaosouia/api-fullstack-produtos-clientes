@@ -1,17 +1,18 @@
 # Fullstack Products & Clients API
 
-A modern RESTful API for managing products and clients, built with Node.js, Express, TypeORM, and Docker. Designed with Domain-Driven Design (DDD) principles for scalability and maintainability.
+A robust RESTful API for managing products and clients, built with Node.js, Express, TypeORM, and Docker. The project follows Domain-Driven Design (DDD) principles for scalability and maintainability, and includes input validation, error handling, and Swagger documentation.
 
 ---
 
 ## 🚀 Features
 - CRUD operations for products and clients
 - DDD architecture: controllers, services, repositories, entities
-- TypeORM for database management
+- TypeORM for database management (SQLite)
 - Docker support for easy deployment
-- Environment variable support (.env)
+- Environment variable support (`.env`)
 - Swagger (OpenAPI) documentation at `/api-docs`
-- Input validation (e.g., phone accepts only numbers)
+- Input validation (regex for email and phone)
+- Unique constraints for name, email, and phone
 - Error handling and clean responses
 
 ---
@@ -25,10 +26,14 @@ A modern RESTful API for managing products and clients, built with Node.js, Expr
 │   ├── repositories
 │   ├── routes
 │   ├── services
-│   └── server.js
+│   ├── server.js
+│   └── swagger.js
+├── .dockerignore
+├── .env
 ├── .env.example
 ├── .gitignore
 ├── docker-compose.yml
+├── Dockerfile
 ├── package.json
 └── README.md
 ```
@@ -102,8 +107,10 @@ docker-compose up --build
 ## 💡 Notes
 - Node.js and npm required
 - SQLite3 used for local development
-- Phone input accepts only phone numbers structure
+- Phone input accepts only valid phone numbers (regex)
+- Email input validated with regex
 - DDD architecture for clean code separation
+- Unique constraints for name, email, and phone
 
 ---
 
